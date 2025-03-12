@@ -1,48 +1,92 @@
 import "./pages/index.css";
-import { renderInitialCards, newCardAdd } from "./components/card";
+import { initialCards } from "./cards";
 import { openModal, closeModal, handleEscape } from "./components/modal";
+import { createCard, removeCard } from "./components/card";
 
-const popupBtnOpenEdit = document.querySelector(".profile__edit-button");
-const popupBtnOpenAdd = document.querySelector(".profile__add-button");
+const popups = document.querySelectorAll(".popup");
 
-let formElement = document.forms["edit-profile"];
-let nameInput = document.forms["edit-profile"].elements["name"];
-let jobInput = document.forms["edit-profile"].elements["description"];
+const popupTypeImg = document.querySelector(".popup_type_image");
+const popupProfileEdit = document.querySelector(".popup_type_edit");
+const popupProfileNewCard = document.querySelector(".popup_type_new-card");
 
-let profileTitle = document.querySelector(".profile__title");
-let profileDesk = document.querySelector(".profile__description");
+const cardsContainer = document.querySelector(".places__list");
 
-const popupEdit = document.querySelector(".popup_type_edit");
-const popupAdd = document.querySelector(".popup_type_new-card");
+const popupBtnEdit = document.querySelector(".profile__edit-button");
+const popupBtnAdd = document.querySelector(".profile__add-button");
 
-function handleFormSubmit(evt) {
+const nameInput = popupProfileEdit.querySelector(".popup__input_type_name");
+const jobInput = popupProfileEdit.querySelector(
+  ".popup__input_type_description"
+);
+
+const profileTitle = document.querySelector(".profile__title");
+const profileDesk = document.querySelector(".profile__description");
+
+function handleProfileFormSubmitEdit(evt) {
   evt.preventDefault();
-  let popup = document.querySelector(".popup");
   profileTitle.textContent = nameInput.value;
   profileDesk.textContent = jobInput.value;
-  closeModal(popup);
+  closeModal(popupProfileEdit);
 }
 
-popupBtnOpenEdit.addEventListener("click", function () {
+popupBtnEdit.addEventListener("click", function () {
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDesk.textContent;
-  openModal(popupEdit);
+  openModal(popupProfileEdit);
 });
 
-document.querySelectorAll(".popup").forEach((item) => {
-  item.addEventListener("click", function (event) {
+function addNewCard(event) {
+  event.preventDefault();
+  const nameNewCard = document.querySelector(
+    ".popup__input_type_card-name"
+  ).value;
+  const urlNewCard = document.querySelector(".popup__input_type_url").value;
+  const card = {
+    name: nameNewCard,
+    link: urlNewCard,
+  };
+  const cardClone = createCard(card, removeCard, likesToogle, openImageBigSize);
+  cardsContainer.prepend(cardClone);
+  event.target.reset();
+  closeModal(popupProfileNewCard);
+}
+
+function likesToogle(event) {
+  event.classList.toggle("card__like-button_is-active");
+}
+
+function openImageBigSize(event) {
+  const clickedImage = event.target;
+  const popupImage = popupTypeImg.querySelector(".popup__image");
+  const popupCaption = popupTypeImg.querySelector(".popup__caption");
+  popupImage.src = clickedImage.src;
+  popupImage.alt = clickedImage.alt;
+  popupCaption.textContent = clickedImage.alt;
+  openModal(popupTypeImg);
+}
+
+popups.forEach((popup) => {
+  popup.addEventListener("click", function (event) {
     if (
       event.target.classList.contains("popup__close") ||
       event.target.classList.contains("popup")
     ) {
-      closeModal(item);
+      closeModal(popup);
     }
   });
 });
 
-formElement.addEventListener("submit", handleFormSubmit);
-popupBtnOpenAdd.addEventListener("click", () => openModal(popupAdd));
-document.addEventListener("keydown", handleEscape);
-popupAdd.addEventListener("click", newCardAdd);
+popupBtnAdd.addEventListener("click", () => openModal(popupProfileNewCard));
+document.addEventListener("keydown", () => handleEscape);
+popupProfileNewCard.addEventListener("submit", addNewCard);
+popupProfileEdit.addEventListener("submit", handleProfileFormSubmitEdit);
+
+function renderInitialCards() {
+  initialCards.forEach(function (card) {
+    cardsContainer.append(
+      createCard(card, removeCard, likesToogle, openImageBigSize)
+    );
+  });
+}
 
 renderInitialCards();
