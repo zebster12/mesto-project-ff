@@ -77,7 +77,6 @@ popups.forEach((popup) => {
 });
 
 popupBtnAdd.addEventListener("click", () => openModal(popupProfileNewCard));
-document.addEventListener("keydown", () => handleEscape);
 popupProfileNewCard.addEventListener("submit", addNewCard);
 popupProfileEdit.addEventListener("submit", handleProfileFormSubmitEdit);
 
