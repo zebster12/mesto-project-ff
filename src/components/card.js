@@ -1,6 +1,11 @@
-import { deleteCard } from "./api";
-import { addLike, removeLike } from "./api";
-function createCard(card, removeCard, openImageBigSize, profileIdMe) {
+function createCard(
+  card,
+  removeCard,
+  openImageBigSize,
+  profileIdMe,
+  setLikeActive,
+  likesToogle
+) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardClone = cardTemplate.querySelector(".card").cloneNode(true);
   const removeButton = cardClone.querySelector(".card__delete-button");
@@ -19,17 +24,20 @@ function createCard(card, removeCard, openImageBigSize, profileIdMe) {
     }
   });
   setLikeActive(cardLike, isLiked);
-  
-  cardLike.addEventListener("click", () => {
-    likesToogle(cardLike, card._id, cardLikeNumber, isLiked);
+
+  cardLike.addEventListener("click", (event) => {
+    event.preventDefault();
+    likesToogle(cardLike, card._id, cardLikeNumber);
   });
 
   cardImage.addEventListener("click", function (event) {
+    event.preventDefault();
     openImageBigSize(event);
   });
 
   if (profileIdMe === card.owner._id) {
-    removeButton.addEventListener("click", function () {
+    removeButton.addEventListener("click", function (event) {
+      event.preventDefault();
       removeCard(cardClone, card._id);
     });
   } else {
@@ -42,29 +50,4 @@ function createCard(card, removeCard, openImageBigSize, profileIdMe) {
   return cardClone;
 }
 
-function removeCard(card, _id) {
-  deleteCard(_id).then(() => {
-    card.remove();
-  });
-}
-
-function likesToogle(likeButton, cardId, likeCounterElement) {
-  const isLiked = likeButton.classList.contains("card__like-button_is-active");
-  const likeAction = isLiked ? removeLike : addLike;
-
-  likeAction(cardId).then((updatedCard) => {
-    likeButton.classList.toggle("card__like-button_is-active");
-    if (likeCounterElement) {
-      likeCounterElement.textContent = updatedCard.likes.length;
-    }
-  });
-}
-function setLikeActive(likeButton, isLiked) {
-  if (isLiked) {
-    likeButton.classList.add("card__like-button_is-active");
-  } else {
-    likeButton.classList.remove("card__like-button_is-active");
-  }
-}
-
-export { createCard, removeCard, setLikeActive, likesToogle };
+export { createCard };

@@ -95,7 +95,7 @@ function deleteCard(_id) {
     method: "DELETE",
     headers: config.headers,
     body: JSON.stringify({
-      id: _id,
+      _id: _id,
     }),
   })
     .then((res) => {

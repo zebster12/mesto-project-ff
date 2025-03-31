@@ -118,12 +118,20 @@
               class="popup__input popup__input_type_card-change"
               placeholder="Введите ссылку на картинку"
               required
-              
             />
             <span class="form__input-error change__img-error"></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
+          </form>
+        </div>
+      </div>
+      <div class="popup popup_type_confirme">
+        <div class="popup__content">
+          <button type="button" class="popup__close"></button>
+          <h3 class="popup__title">Вы уверены?</h3>
+          <form class="popup__form" novalidate>
+            <button type="submit" class="button popup__button">Да</button>
           </form>
         </div>
       </div>
@@ -143,9 +151,9 @@
         <div class="card__description">
           <h2 class="card__title"></h2>
           <div class="card__like">
-          <button type="button" class="card__like-button"></button>
-          <span class="card__like-text"></span>
-        </div>
+            <button type="button" class="card__like-button"></button>
+            <span class="card__like-text"></span>
+          </div>
         </div>
       </li>
     </template>
