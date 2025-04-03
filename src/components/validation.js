@@ -40,13 +40,18 @@ function enableValidation(config) {
 function isValid(formElement, inputElement, config) {
   const errorCustom = inputElement.dataset.errorMessage;
   const defaultMessage = inputElement.validationMessage;
+
   if (inputElement.validity.patternMismatch) {
     inputElement.setCustomValidity(errorCustom);
   } else {
     inputElement.setCustomValidity("");
   }
   if (!inputElement.validity.valid) {
-    showInputError(formElement, inputElement, defaultMessage, config);
+    if (inputElement.type === "text") {
+      showInputError(formElement, inputElement, errorCustom, config);
+    } else {
+      showInputError(formElement, inputElement, defaultMessage, config);
+    }
   } else {
     hideInputError(formElement, inputElement, config);
   }
@@ -57,7 +62,7 @@ function hasInvalidInput(inputList) {
     return !inputElement.validity.valid;
   });
 }
-
+//Добавления,удаление стилей для кнопки попап
 function toggleButtonState(inputList, buttonElement, config) {
   if (hasInvalidInput(inputList)) {
     buttonElement.disabled = true;
@@ -67,7 +72,7 @@ function toggleButtonState(inputList, buttonElement, config) {
     buttonElement.classList.remove(config.inactiveButtonClass);
   }
 }
-
+//Очистить валидацию
 function clearValidation(formElement, config) {
   const inputList = Array.from(
     formElement.querySelectorAll(config.inputSelector)

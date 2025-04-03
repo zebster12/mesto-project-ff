@@ -1,10 +1,13 @@
+import { addLike, removeLike } from "./api";
+
+//Функция для создания карточки
 function createCard(
   card,
-  removeCard,
   openImageBigSize,
   profileIdMe,
-  setLikeActive,
-  likesToogle
+  popupConfirme,
+  deleteConfirme,
+  openModal
 ) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardClone = cardTemplate.querySelector(".card").cloneNode(true);
@@ -23,6 +26,7 @@ function createCard(
       return true;
     }
   });
+
   setLikeActive(cardLike, isLiked);
 
   cardLike.addEventListener("click", (event) => {
@@ -36,10 +40,10 @@ function createCard(
   });
 
   if (profileIdMe === card.owner._id) {
-    removeButton.addEventListener("click", function (event) {
+    removeButton.onclick = function (event) {
       event.preventDefault();
-      removeCard(cardClone, card._id);
-    });
+      removeCard(cardClone, card._id, popupConfirme, deleteConfirme, openModal);
+    };
   } else {
     removeButton.remove();
   }
@@ -49,5 +53,37 @@ function createCard(
   img.alt = card.name;
   return cardClone;
 }
+//Функция для удаления карточки
+function removeCard(card, id, popupConfirme, deleteConfirme, openModal) {
+  openModal(popupConfirme);
 
-export { createCard };
+  const button = popupConfirme.querySelector(".popup__button");
+
+  button.onclick = function (event) {
+    event.preventDefault();
+
+    deleteConfirme(card, id);
+  };
+}
+//Добавление или удаление лайка у карточки
+function likesToogle(likeButton, cardId, likeCounterElement) {
+  const isLiked = likeButton.classList.contains("card__like-button_is-active");
+  const likeAction = isLiked ? removeLike : addLike;
+
+  likeAction(cardId).then((updatedCard) => {
+    likeButton.classList.toggle("card__like-button_is-active");
+    if (likeCounterElement) {
+      likeCounterElement.textContent = updatedCard.likes.length;
+    }
+  });
+}
+//Добавить или убрать класс для лайка
+function setLikeActive(likeButton, isLiked) {
+  if (isLiked) {
+    likeButton.classList.add("card__like-button_is-active");
+  } else {
+    likeButton.classList.remove("card__like-button_is-active");
+  }
+}
+
+export { createCard, likesToogle };

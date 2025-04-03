@@ -1,3 +1,2 @@
 # Проектная работа Mesto
-
-https://github.com/zebster12/mesto-project-ff
+https://zebster12.github.io/mesto-project-ff/

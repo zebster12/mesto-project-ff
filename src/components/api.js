@@ -6,30 +6,25 @@ const config = {
   },
 };
 
+const response = (res) => {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка: ${res.status}`);
+};
+//Получение всех карточек с сервера
 function getInitialCards() {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(response);
 }
-
+//Получение профиля с сервера
 function getProfileData() {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(response);
 }
-
+//Изменение данных на сервере
 function renameProfile(name, about) {
   return fetch(`${config.baseUrl}/users/me`, {
     method: "PATCH",
@@ -38,18 +33,9 @@ function renameProfile(name, about) {
       name: name,
       about: about,
     }),
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.error("Ошибка при обновлении профиля:", err);
-    });
+  }).then(response);
 }
+//Изменение аватара на сервере
 function changeAvatar(avatarUrl) {
   return fetch(`${config.baseUrl}/users/me/avatar`, {
     method: "PATCH",
@@ -57,19 +43,9 @@ function changeAvatar(avatarUrl) {
     body: JSON.stringify({
       avatar: avatarUrl,
     }),
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.error("Ошибка при обновлении профиля:", err);
-    });
+  }).then(response);
 }
-
+//Добавление новой карточки на сервер
 function postNewCard(name, link, _id) {
   return fetch(`${config.baseUrl}/cards`, {
     method: "POST",
@@ -78,18 +54,9 @@ function postNewCard(name, link, _id) {
       name: name,
       link: link,
     }),
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.error("Ошибка при обновлении профиля:", err);
-    });
+  }).then(response);
 }
+//Удаление карточки
 function deleteCard(_id) {
   return fetch(`${config.baseUrl}/cards/${_id}`, {
     method: "DELETE",
@@ -97,51 +64,21 @@ function deleteCard(_id) {
     body: JSON.stringify({
       _id: _id,
     }),
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.error("Ошибка при обновлении профиля:", err);
-    });
+  }).then(response);
 }
-
+//Добавление лайка на сервере
 function addLike(_id) {
   return fetch(`${config.baseUrl}/cards/likes/${_id}`, {
     method: "PUT",
     headers: config.headers,
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.error("Ошибка при обновлении профиля:", err);
-    });
+  }).then(response);
 }
-
+//Удаление лайка на сервере
 function removeLike(_id) {
   return fetch(`${config.baseUrl}/cards/likes/${_id}`, {
     method: "DELETE",
     headers: config.headers,
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.error("Ошибка при обновлении профиля:", err);
-    });
+  }).then(response);
 }
 
 export {
