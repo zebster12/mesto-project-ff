@@ -1,14 +1,7 @@
 import { addLike, removeLike } from "./api";
 
 //Функция для создания карточки
-function createCard(
-  card,
-  openImageBigSize,
-  profileIdMe,
-  popupConfirme,
-  deleteConfirme,
-  openModal
-) {
+function createCard(card, openImageBigSize, profileIdMe, removeCard) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardClone = cardTemplate.querySelector(".card").cloneNode(true);
   const removeButton = cardClone.querySelector(".card__delete-button");
@@ -42,7 +35,7 @@ function createCard(
   if (profileIdMe === card.owner._id) {
     removeButton.onclick = function (event) {
       event.preventDefault();
-      removeCard(cardClone, card._id, popupConfirme, deleteConfirme, openModal);
+      removeCard(cardClone, card._id);
     };
   } else {
     removeButton.remove();
@@ -53,29 +46,22 @@ function createCard(
   img.alt = card.name;
   return cardClone;
 }
-//Функция для удаления карточки
-function removeCard(card, id, popupConfirme, deleteConfirme, openModal) {
-  openModal(popupConfirme);
 
-  const button = popupConfirme.querySelector(".popup__button");
-
-  button.onclick = function (event) {
-    event.preventDefault();
-
-    deleteConfirme(card, id);
-  };
-}
 //Добавление или удаление лайка у карточки
 function likesToogle(likeButton, cardId, likeCounterElement) {
   const isLiked = likeButton.classList.contains("card__like-button_is-active");
   const likeAction = isLiked ? removeLike : addLike;
 
-  likeAction(cardId).then((updatedCard) => {
-    likeButton.classList.toggle("card__like-button_is-active");
-    if (likeCounterElement) {
-      likeCounterElement.textContent = updatedCard.likes.length;
-    }
-  });
+  likeAction(cardId)
+    .then((updatedCard) => {
+      likeButton.classList.toggle("card__like-button_is-active");
+      if (likeCounterElement) {
+        likeCounterElement.textContent = updatedCard.likes.length;
+      }
+    })
+    .catch((err) => {
+      console.error("Ошибка:", err);
+    });
 }
 //Добавить или убрать класс для лайка
 function setLikeActive(likeButton, isLiked) {

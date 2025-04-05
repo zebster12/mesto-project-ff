@@ -108,9 +108,7 @@ function addNewCard(evt) {
         data,
         openImageBigSize,
         profileIdMe,
-        popupConfirme,
-        deleteConfirme,
-        openModal
+        removeCard
       );
       cardsContainer.prepend(cardClone);
       evt.target.reset();
@@ -160,10 +158,26 @@ popupBtnProfileImg.addEventListener("click", function () {
 });
 
 function deleteConfirme(card, _id) {
-  deleteCard(_id).then((_id) => {
-    card.remove();
-  });
-  closeModal(popupConfirme);
+  deleteCard(_id)
+    .then((_id) => {
+      card.remove();
+      closeModal(popupConfirme);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+//Функция для удаления карточки
+function removeCard(card, id) {
+  openModal(popupConfirme);
+
+  const button = popupConfirme.querySelector(".popup__button");
+
+  button.onclick = function (event) {
+    event.preventDefault();
+
+    deleteConfirme(card, id);
+  };
 }
 
 //Открытие попап редактирование профиля
@@ -188,14 +202,7 @@ Promise.all([getInitialCards(), getProfileData()])
     profileIdMe = profile._id;
     cards.forEach((card) => {
       cardsContainer.append(
-        createCard(
-          card,
-          openImageBigSize,
-          profileIdMe,
-          popupConfirme,
-          deleteConfirme,
-          openModal
-        )
+        createCard(card, openImageBigSize, profileIdMe, removeCard)
       );
     });
   })
