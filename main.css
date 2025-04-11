@@ -37,4 +37,5 @@
 .popup{align-items:center;background-color:rgba(0,0,0,.5);display:none;font-family:Inter,Arial,sans-serif;inset:0;justify-content:center;position:fixed;z-index:10}.form__input_type_error{border:none;border-bottom:1px solid red}.form__input-error_active{color:red;font-size:12px}.popup__button__active{background-color:#fff;border:1px solid #000;color:#000;opacity:.2}
 .popup_is-animated{display:flex;opacity:0;pointer-events:none;transition:visibility 0s .6s,opacity .6s;-webkit-user-select:none;-moz-user-select:none;user-select:none;visibility:hidden}
 .popup_is-opened{display:flex;opacity:1;pointer-events:all;transition:visibility 0s,opacity .6s;visibility:visible}
+.loader{animation:spin .5s linear infinite;border:10px solid #000000c1;border-radius:50%;border-top-color:#fff;height:100px;left:calc(50% - 50px);position:absolute;top:calc(50% - 50px);width:100px;z-index:100}@keyframes spin{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}
 
